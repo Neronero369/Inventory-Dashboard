@@ -139,7 +139,13 @@
               defval: null
             });
 
-            resolve(jsonArray);
+            // Defensive cleaning step (filtering out blank rows)
+            const cleanData = jsonArray.filter(row => {
+              if (!row) return false;
+              return Object.values(row).some(v => v !== null && v !== undefined && String(v).trim() !== '');
+            });
+
+            resolve(cleanData);
           } catch (err) {
             reject(err);
           }
@@ -260,11 +266,175 @@
           }
         }
       }, 50);
+    },
+
+    /**
+     * Automatically fetches and ingests the default inventory Excel file ('data inventory.xlsx')
+     * on initial dashboard load using the fetch() API and SheetJS.
+     * Defensive cleaning removes blank rows.
+     * Automatically populates state.rawData, extracts unique values, populates dropdowns,
+     * triggers applyFilters(), and updates UI state.
+     * If the fetch fails (404, CORS error when served over file:// protocol, network error),
+     * a silent warning is logged to the console and the dashboard remains empty waiting for manual upload.
+     * @param {string} [filePath='data inventory.xlsx']
+     * @returns {Promise<Array<Object>|null>}
+     */
+    async autoLoadDefaultData(filePath = 'data inventory.xlsx') {
+      const uploadButtonText = document.getElementById('uploadButtonText');
+      const originalButtonText = uploadButtonText ? uploadButtonText.innerText : "Charger l'Excel d'Inventaire";
+
+      try {
+        // Temporarily indicate auto-loading on the upload button & status badge
+        this.updateUploadUIState('loading', filePath);
+        if (uploadButtonText) {
+          uploadButtonText.innerText = 'Chargement auto...';
+        }
+
+        const startTime = performance.now();
+
+        // Support multiple relative paths (same folder, parent root folder, URL-encoded spaces)
+        const candidatePaths = Array.from(new Set([
+          filePath,
+          './data inventory.xlsx',
+          '../data inventory.xlsx',
+          'data inventory.xlsx',
+          'data%20inventory.xlsx',
+          '../data%20inventory.xlsx',
+          './data%20inventory.xlsx',
+          'Inventory_Dashboard_v1/data inventory.xlsx',
+          './Inventory_Dashboard_v1/data inventory.xlsx'
+        ]));
+
+        let response = null;
+        let resolvedPath = filePath;
+
+        for (const candidate of candidatePaths) {
+          try {
+            const res = await fetch(encodeURI(candidate));
+            if (res && res.ok) {
+              response = res;
+              resolvedPath = candidate;
+              break;
+            }
+          } catch (fetchErr) {
+            // Silently try next candidate path
+          }
+        }
+
+        if (!response || !response.ok) {
+          throw new Error(`Fichier introuvable (${resolvedPath})`);
+        }
+
+        const buffer = await response.arrayBuffer();
+
+        if (typeof XLSX === 'undefined') {
+          throw new Error('Bibliothèque SheetJS (XLSX) non disponible.');
+        }
+
+        const data = new Uint8Array(buffer);
+        const workbook = XLSX.read(data, {
+          type: 'array',
+          cellDates: true,
+          dense: false
+        });
+
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        if (!worksheet) {
+          throw new Error('Aucune feuille trouvée dans le classeur Excel.');
+        }
+
+        const jsonArray = XLSX.utils.sheet_to_json(worksheet, {
+          raw: false,
+          defval: null
+        });
+
+        // Defensive cleaning step (filtering out blank rows)
+        const cleanData = jsonArray.filter(row => {
+          if (!row) return false;
+          return Object.values(row).some(v => v !== null && v !== undefined && String(v).trim() !== '');
+        });
+
+        const endTime = performance.now();
+        const durationMs = (endTime - startTime).toFixed(0);
+
+        this.rawInventoryData = cleanData;
+        this.datasetMetadata = {
+          fileName: filePath,
+          fileSizeBytes: buffer.byteLength,
+          rowCount: cleanData.length,
+          columnHeaders: cleanData.length > 0 ? Object.keys(cleanData[0]) : [],
+          parsedInMs: durationMs,
+          timestamp: new Date().toISOString()
+        };
+
+        console.group('%c📦 AUTO-LOAD INVENTORY DATA REPORT (SheetJS)', 'color: #3b82f6; font-size: 14px; font-weight: bold;');
+        console.log('%cFile Details:', 'font-weight: bold; color: #10b981;', {
+          filename: filePath,
+          size: `${(buffer.byteLength / (1024 * 1024)).toFixed(2)} MB`,
+          parseTime: `${durationMs} ms`,
+          totalRows: cleanData.length
+        });
+        console.log('%cDetected Column Headers:', 'font-weight: bold; color: #8b5cf6;', this.datasetMetadata.columnHeaders);
+        if (cleanData.length > 0) {
+          console.log('%cSample First 5 Rows:', 'font-weight: bold; color: #f59e0b;');
+          console.table(cleanData.slice(0, 5));
+        }
+        console.groupEnd();
+
+        // 1. Save to state.rawData
+        if (window.state) {
+          window.state.rawData = cleanData;
+        }
+
+        // 2. Extract unique values and populate dropdowns
+        if (window.FilterEngine && typeof window.FilterEngine.extractUniqueValues === 'function') {
+          const uniqueValues = window.FilterEngine.extractUniqueValues(cleanData);
+          window.FilterEngine.populateDropdowns(uniqueValues);
+          window.FilterEngine.setupDropdownListeners();
+        }
+
+        // 3. Trigger initial filter evaluation & KPI calculation
+        if (typeof window.applyFilters === 'function') {
+          window.applyFilters();
+        } else if (window.FilterEngine && typeof window.FilterEngine.applyFilters === 'function') {
+          window.FilterEngine.applyFilters();
+        }
+
+        // 4. Update UI with success badge & button text
+        this.updateUploadUIState('success', filePath, cleanData.length, durationMs, this.datasetMetadata.columnHeaders);
+
+        // 5. Dispatch global inventoryDataReady event
+        window.dispatchEvent(new CustomEvent('inventoryDataReady', {
+          detail: {
+            data: cleanData,
+            metadata: this.datasetMetadata
+          }
+        }));
+
+        return cleanData;
+      } catch (error) {
+        // Silent warning: expected when offline, 404, or CORS under file:// protocol
+        console.warn('[DataService] Chargement automatique ignoré (attente d\'importation manuelle):', error.message || error);
+
+        // Revert upload UI to standby state
+        const statusBadge = document.getElementById('fileStatusBadge');
+        if (statusBadge) {
+          statusBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700';
+          statusBadge.innerHTML = '<i class="fa-regular fa-clock"></i> Aucun fichier';
+        }
+        if (uploadButtonText) {
+          uploadButtonText.innerText = "Charger l'Excel d'Inventaire";
+        }
+        return null;
+      }
     }
   };
 
   // Expose to window
   window.DataService = DataService;
   window.exportFilteredToExcel = DataService.exportFilteredToExcel.bind(DataService);
+  window.autoLoadDefaultData = DataService.autoLoadDefaultData.bind(DataService);
 
 })(window);

@@ -351,5 +351,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // 8. Auto-load default inventory file ("data inventory.xlsx") on initial page load
+  if (typeof window.autoLoadDefaultData === 'function') {
+    window.autoLoadDefaultData();
+  } else if (window.DataService && typeof window.DataService.autoLoadDefaultData === 'function') {
+    window.DataService.autoLoadDefaultData();
+  }
 });
 
