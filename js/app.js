@@ -268,6 +268,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Toggle Quick Filters Accordion
+  const btnToggleFilters = document.getElementById('btn-toggle-filters');
+  const quickFiltersContainer = document.getElementById('quick-filters-container');
+  const toggleFiltersIcon = document.getElementById('toggle-filters-icon');
+
+  if (btnToggleFilters && quickFiltersContainer) {
+    btnToggleFilters.addEventListener('click', () => {
+      const isHidden = quickFiltersContainer.classList.toggle('hidden');
+      if (toggleFiltersIcon) {
+        if (isHidden) {
+          toggleFiltersIcon.classList.remove('rotate-180');
+          btnToggleFilters.setAttribute('aria-expanded', 'false');
+        } else {
+          toggleFiltersIcon.classList.add('rotate-180');
+          btnToggleFilters.setAttribute('aria-expanded', 'true');
+        }
+      }
+    });
+  }
+
   // 4. Drag & Drop Support on Upload Button
   const uploadDropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('excelUpload');
