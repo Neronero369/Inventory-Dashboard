@@ -446,12 +446,10 @@
               class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm border border-emerald-500/20 flex-shrink-0">
               <i class="fa-solid fa-table-list"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-sm font-bold text-slate-100">Lignes d'Inventaire Filtrées</h3>
-                <div id="tableRecordCountBadge"></div>
-              </div>
-              <p id="tableSubtitleNote" class="text-[11px] text-slate-400">Détail des stocks par référence produit</p>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-100">Lignes d'Inventaire Filtrées</h3>
+              <div id="tableRecordCountBadge" class="hidden"></div>
+              <div id="tableSubtitleNote" class="hidden"></div>
             </div>
           </div>
           <div class="flex items-center gap-2.5">
@@ -568,7 +566,7 @@
   <script src="js/state.js?v=13"></script>
   <script src="js/filterEngine.js?v=13"></script>
   <script src="js/kpiEngine.js?v=13"></script>
-  <script src="js/uiRenderer.js?v=13"></script>
+  <script src="js/uiRenderer.js?v=14"></script>
   <script src="js/scanner.js?v=13"></script>
   <script src="js/app.js?v=13"></script>
 </body>

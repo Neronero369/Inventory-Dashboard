@@ -74,7 +74,7 @@
     }
 
     if (!Array.isArray(filteredData) || filteredData.length === 0) {
-      if (tableSubtitle) tableSubtitle.textContent = 'Aucun enregistrement d\'inventaire correspondant';
+      if (tableSubtitle) tableSubtitle.textContent = '';
       if (tableCountBadge) tableCountBadge.innerHTML = '';
       tableContainer.innerHTML = `
         <div class="p-10 text-center text-slate-400">
@@ -89,21 +89,14 @@
     const isSliced = totalCount > 200;
     const displayData = isSliced ? filteredData.slice(0, 200) : filteredData;
 
-    // Update note above table
+    // Clear note above table - keep only the table title clean
     if (tableSubtitle) {
-      if (isSliced) {
-        tableSubtitle.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-          <i class="fa-solid fa-bolt text-xs"></i> Affichage des 200 premiers résultats
-        </span> sur ${totalCount.toLocaleString()} lignes filtrées (Protection des performances)`;
-      } else {
-        tableSubtitle.textContent = `Affichage de la totalité des ${totalCount.toLocaleString()} lignes`;
-      }
+      tableSubtitle.innerHTML = '';
+      tableSubtitle.textContent = '';
     }
 
     if (tableCountBadge) {
-      tableCountBadge.innerHTML = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-        ${displayData.length} sur ${totalCount.toLocaleString()} lignes
-      </span>`;
+      tableCountBadge.innerHTML = '';
     }
 
     // Build Table HTML
