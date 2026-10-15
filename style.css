@@ -133,36 +133,25 @@ select[multiple] option:checked {
 
 /* KPI Card Dynamic Brand Border Flourish */
 .kpi-card {
-  border-top-width: 4px !important;
-  border-top-color: #cbd5e1;
+  border-top-width: 3px !important;
+  border-top-color: #334155;
   transition: border-top-color 0.3s ease, box-shadow 0.2s ease;
 }
 
-/* Upgraded Reset All Filters Button - Branded Corporate Palette */
-#resetFiltersBtn {
-  color: #1f4f8d !important;
-  background-color: #f0f6fc !important;
-  border-color: #c2ddf3 !important;
-  box-shadow: 0 1px 2px 0 rgba(31, 79, 141, 0.08);
+/* Subtle Danger Reset Action */
+#btn-reset, #resetFiltersBtn {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#resetFiltersBtn:hover {
-  background-color: #e1eff9 !important;
-  border-color: #3076bb !important;
-  color: #15355e !important;
-  box-shadow: 0 2px 8px -1px rgba(48, 118, 187, 0.25);
-}
-
-#resetFiltersBtn:active {
+#btn-reset:active, #resetFiltersBtn:active {
   transform: scale(0.96);
 }
 
-#resetFiltersBtn i {
+#btn-reset i, #resetFiltersBtn i {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#resetFiltersBtn:hover i {
+#btn-reset:hover i, #resetFiltersBtn:hover i {
   transform: rotate(-180deg);
 }
 
