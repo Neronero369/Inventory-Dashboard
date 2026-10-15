@@ -422,33 +422,10 @@
 
 
       <!-- ===================================================================== -->
-      <!-- 4. VISUALISATIONS & TABLEAU DE DONNÉES                                -->
+      <!-- 4. TABLEAU DE DONNÉES & VISUALISATIONS                                -->
       <!-- ===================================================================== -->
 
-      <!-- Section A: Graphique Barres Chart.js (Répartition des Stocks par Emplacement) -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-6">
-        <div class="flex items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-100">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm sm:text-base flex-shrink-0">
-              <i class="fa-solid fa-chart-column"></i>
-            </div>
-            <div>
-              <h3 class="text-sm sm:text-base font-bold text-slate-900">Répartition par Emplacement</h3>
-              <p class="text-[11px] sm:text-xs text-slate-500">Quantités cumulées en stock (qty) par dépôt</p>
-            </div>
-          </div>
-          <span id="chartDepotsCountBadge"
-            class="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
-            0 Emplacements
-          </span>
-        </div>
-        <!-- Dedicated responsive container with fixed height on mobile (h-64) and desktop (md:h-96) -->
-        <div class="relative h-64 md:h-96 w-full">
-          <canvas id="inventoryChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Section B: Tableau de Données Filtrées (avec Limitation aux 200 Premiers) -->
+      <!-- Section A: Tableau de Données Filtrées (avec Limitation aux 200 Premiers) -->
       <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-6">
         <div
           class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-100">
@@ -485,6 +462,29 @@
               <p class="text-sm font-medium">Chargez un fichier Excel pour afficher les données d'inventaire.</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Section B: Graphique Barres Chart.js (Répartition des Stocks par Emplacement) -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-4 sm:p-6">
+        <div class="flex items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm sm:text-base flex-shrink-0">
+              <i class="fa-solid fa-chart-column"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">Répartition par Emplacement</h3>
+              <p class="text-[11px] sm:text-xs text-slate-500">Quantités cumulées en stock (qty) par dépôt</p>
+            </div>
+          </div>
+          <span id="chartDepotsCountBadge"
+            class="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+            0 Emplacements
+          </span>
+        </div>
+        <!-- Dedicated responsive container with fixed height on mobile (h-64) and desktop (md:h-96) -->
+        <div class="relative h-64 md:h-96 w-full">
+          <canvas id="inventoryChart"></canvas>
         </div>
       </div>
 
