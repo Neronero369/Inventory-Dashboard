@@ -288,6 +288,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Toggle Sensitive Financial KPIs Accordion
+  const btnToggleFinancials = document.getElementById('btn-toggle-financials');
+  const financialKpisContainer = document.getElementById('financial-kpis-container');
+  const toggleFinancialsIcon = document.getElementById('toggle-financials-icon');
+  const toggleFinancialsEyeIcon = document.getElementById('toggle-financials-eye-icon') || btnToggleFinancials?.querySelector('.fa-eye-slash, .fa-eye');
+  const toggleFinancialsText = document.getElementById('toggle-financials-text');
+
+  if (btnToggleFinancials && financialKpisContainer) {
+    btnToggleFinancials.addEventListener('click', () => {
+      const isHidden = financialKpisContainer.classList.toggle('hidden');
+      if (toggleFinancialsIcon) {
+        if (isHidden) {
+          toggleFinancialsIcon.classList.remove('rotate-180');
+          btnToggleFinancials.setAttribute('aria-expanded', 'false');
+        } else {
+          toggleFinancialsIcon.classList.add('rotate-180');
+          btnToggleFinancials.setAttribute('aria-expanded', 'true');
+        }
+      }
+      if (toggleFinancialsEyeIcon) {
+        if (isHidden) {
+          toggleFinancialsEyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          toggleFinancialsEyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      }
+      if (toggleFinancialsText) {
+        toggleFinancialsText.textContent = isHidden ? 'Afficher les Données Financières' : 'Masquer les Données Financières';
+      }
+    });
+  }
+
   // 4. Drag & Drop Support on Upload Button
   const uploadDropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('excelUpload');

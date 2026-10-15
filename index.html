@@ -339,12 +339,11 @@
       </div>
 
       <!-- ===================================================================== -->
-      <!-- 3. RANGÉE SUPÉRIEURE DE 3 CARTES KPI (Thème Clair & Ombre Délicate)  -->
+      <!-- 3. CARTES KPI (Quantité Opérationnelle & Données Financières Sécurisées) -->
       <!-- ===================================================================== -->
-      <!-- Grille KPI: 1 colonne sur mobile, 3 colonnes sur desktop -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 sm:mb-6">
+      <div class="mb-4 sm:mb-6 space-y-3">
 
-        <!-- KPI 1: Quantité Totale -->
+        <!-- KPI 1: Quantité Totale (Opérationnelle, non-sensible, visible en permanence) -->
         <div id="card-total-qty"
           class="kpi-card bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200/80 border-t-4 border-slate-300 shadow-xs hover:shadow-md transition-all min-w-0 overflow-hidden">
           <div class="flex items-center justify-between">
@@ -365,46 +364,58 @@
           </div>
         </div>
 
-        <!-- KPI 2: Valeur Vente (TTC) -->
-        <div id="card-retail-value"
-          class="kpi-card bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200/80 border-t-4 border-slate-300 shadow-xs hover:shadow-md transition-all min-w-0 overflow-hidden">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate mr-1">Valeur Vente (TTC)</span>
-            <div
-              class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
-              <i class="fa-solid fa-sack-dollar"></i>
-            </div>
-          </div>
-          <div class="mt-2 sm:mt-3 min-w-0">
-            <h3 id="kpi-retail-value"
-              class="text-base sm:text-lg lg:text-xl font-bold tracking-tight break-words text-slate-900 kpi-value-text">-- DZD</h3>
-            <div class="flex items-center justify-between mt-1 sm:mt-1.5 flex-wrap gap-1">
-              <span class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Plein Tarif TTC</span>
-              <span
-                class="text-[9px] sm:text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full flex-shrink-0">Full price</span>
-            </div>
-          </div>
-        </div>
+        <!-- Bouton Révéler / Masquer les Données Financières Sensibles -->
+        <button id="btn-toggle-financials" type="button"
+          class="flex items-center justify-between w-full md:w-auto px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer select-none">
+          <span><i id="toggle-financials-eye-icon" class="fa-solid fa-eye-slash mr-2"></i> <span id="toggle-financials-text">Afficher les Données Financières</span></span>
+          <i id="toggle-financials-icon" class="fa-solid fa-chevron-down ml-3 transition-transform duration-200"></i>
+        </button>
 
-        <!-- KPI 3: Valeur Achat (HT) -->
-        <div id="card-cost-value"
-          class="kpi-card bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200/80 border-t-4 border-slate-300 shadow-xs hover:shadow-md transition-all min-w-0 overflow-hidden">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate mr-1">Valeur Achat (HT)</span>
-            <div
-              class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
-              <i class="fa-solid fa-receipt"></i>
+        <!-- Conteneur Accordéon des Données Financières Sensibles (Masqué par défaut) -->
+        <div id="financial-kpis-container" class="hidden transition-all duration-300 grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+
+          <!-- KPI 2: Valeur Vente (TTC) -->
+          <div id="card-retail-value"
+            class="kpi-card bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200/80 border-t-4 border-slate-300 shadow-xs hover:shadow-md transition-all min-w-0 overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate mr-1">Valeur Vente (TTC)</span>
+              <div
+                class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
+                <i class="fa-solid fa-sack-dollar"></i>
+              </div>
+            </div>
+            <div class="mt-2 sm:mt-3 min-w-0">
+              <h3 id="kpi-retail-value"
+                class="text-base sm:text-lg lg:text-xl font-bold tracking-tight break-words text-slate-900 kpi-value-text">-- DZD</h3>
+              <div class="flex items-center justify-between mt-1 sm:mt-1.5 flex-wrap gap-1">
+                <span class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Plein Tarif TTC</span>
+                <span
+                  class="text-[9px] sm:text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full flex-shrink-0">Full price</span>
+              </div>
             </div>
           </div>
-          <div class="mt-2 sm:mt-3 min-w-0">
-            <h3 id="kpi-cost-value"
-              class="text-base sm:text-lg lg:text-xl font-bold tracking-tight break-words text-slate-900 kpi-value-text">-- DZD</h3>
-            <div class="flex items-center justify-between mt-1 sm:mt-1.5 flex-wrap gap-1">
-              <span class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Coût Global</span>
-              <span
-                class="text-[9px] sm:text-[11px] font-semibold text-amber-600 bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded-full flex-shrink-0">Prix d'Achat</span>
+
+          <!-- KPI 3: Valeur Achat (HT) -->
+          <div id="card-cost-value"
+            class="kpi-card bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-slate-200/80 border-t-4 border-slate-300 shadow-xs hover:shadow-md transition-all min-w-0 overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate mr-1">Valeur Achat (HT)</span>
+              <div
+                class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+            </div>
+            <div class="mt-2 sm:mt-3 min-w-0">
+              <h3 id="kpi-cost-value"
+                class="text-base sm:text-lg lg:text-xl font-bold tracking-tight break-words text-slate-900 kpi-value-text">-- DZD</h3>
+              <div class="flex items-center justify-between mt-1 sm:mt-1.5 flex-wrap gap-1">
+                <span class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Coût Global</span>
+                <span
+                  class="text-[9px] sm:text-[11px] font-semibold text-amber-600 bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded-full flex-shrink-0">Prix d'Achat</span>
+              </div>
             </div>
           </div>
+
         </div>
 
       </div>
